@@ -1,0 +1,101 @@
+/**
+ * EncryptixClient — primary interface for @ppabari/encryptix
+ */
+import { inspectToken } from './utils/inspect.js';
+import type { EncryptixConfig, EncryptOptions, DecryptOptions, EncryptObjectOptions, DecryptObjectOptions, Encoding, HashAlgorithm, RSAKeyPair, KeyPurpose, EnvelopePayload, EnvelopeEncryptOptions, EnvelopeDecryptOptions, SignTokenOptions, VerifyTokenOptions, VerifyTokenResult, StreamEncryptOptions, StreamDecryptOptions, DeriveKeyFromPasswordOptions, DerivedPasswordKey, DeterministicEncryptOptions, DeterministicDecryptOptions, KeyFingerprint, ECCurve, ECKeyPair, TOTPOptions, HOTPOptions, TOTPVerifyResult, RecipientKey, MultiRecipientEnvelope, MultiRecipientOptions, BatchResult, BatchEncryptItem, KeyExportFormat, PayloadInspection, StreamHeaderInspection } from './types/index.js';
+export { EncryptixError } from './utils/errors.js';
+export { generateMasterKey } from './utils/keys.js';
+export { generateToken, generateApiKey, generateUUID, hash, hmac, verifyHmac } from './utils/tokens.js';
+export { generateRSAKeyPair } from './algorithms/rsa.js';
+export { generateRSAPSSKeyPair, rsaPssSign, rsaPssVerify } from './algorithms/rsa-sign.js';
+export { generateECDHKeyPair, deriveSharedSecret, generateECDSAKeyPair, ecdsaSign, ecdsaVerify } from './algorithms/ecdh.js';
+export { deriveKeyFromPassword } from './algorithms/password.js';
+export { generateTOTPSecret, generateTOTP, verifyTOTP, generateHOTP, totpKeyUri, toBase32, fromBase32 } from './algorithms/otp.js';
+export { multiRecipientEncrypt, multiRecipientDecrypt, addRecipient, removeRecipient } from './algorithms/multi-recipient.js';
+export { secureRandomBytes, secureRandomInt, secureRandomFloat, secureRandomString, secureRandomChoice, secureRandomSample, secureRandomShuffle, securePassphrase, CHARSETS } from './utils/random.js';
+export { encryptBatch, decryptBatch, encryptBatchMixed, decryptBatchMixed, encryptBatchSafe, decryptBatchSafe } from './utils/batch.js';
+export { base32Encode, base32Decode, hexEncode, hexDecode, base64Encode, base64urlEncode, base64Decode, safeCompare, convertEncoding } from './utils/codec.js';
+export { inspectPayload, inspectStreamHeader, inspectToken } from './utils/inspect.js';
+export { zeroize, zeroizeAll, withZeroize, createKeyMetadataStore, reEncrypt, reEncryptBatch, exportKeyToJWK, importKeyFromJWK, serializeKey, deserializeKey } from './utils/zeroize.js';
+export type * from './types/index.js';
+export declare class EncryptixClient {
+    private readonly masterKey;
+    private readonly algorithm;
+    private readonly encoding;
+    private readonly hashAlgorithm;
+    private readonly keychain;
+    private readonly namespace;
+    private readonly currentKeyVersion;
+    constructor(config?: EncryptixConfig);
+    encrypt(plaintext: string, purpose: KeyPurpose, options?: EncryptOptions): Promise<string>;
+    decrypt(payload: string, purpose: KeyPurpose, options?: DecryptOptions): Promise<string>;
+    encryptObject<T>(value: T, purpose: KeyPurpose, options?: EncryptObjectOptions): Promise<string>;
+    decryptObject<T>(payload: string, purpose: KeyPurpose, options?: DecryptObjectOptions): Promise<T>;
+    encryptBatch(items: string[], purpose: KeyPurpose, options?: EncryptOptions): Promise<string[]>;
+    decryptBatch(payloads: string[], purpose: KeyPurpose, options?: DecryptOptions): Promise<string[]>;
+    encryptBatchMixed(items: BatchEncryptItem[]): Promise<string[]>;
+    decryptBatchMixed(items: {
+        payload: string;
+        purpose: string;
+        options?: DecryptOptions;
+    }[]): Promise<string[]>;
+    encryptBatchSafe(items: string[], purpose: KeyPurpose, options?: EncryptOptions): Promise<BatchResult<string>[]>;
+    decryptBatchSafe(payloads: string[], purpose: KeyPurpose, options?: DecryptOptions): Promise<BatchResult<string>[]>;
+    encryptDeterministic(plaintext: string, purpose: KeyPurpose, options?: DeterministicEncryptOptions): Promise<string>;
+    decryptDeterministic(payload: string, purpose: KeyPurpose, options?: DeterministicDecryptOptions): Promise<string>;
+    envelopeEncrypt(plaintext: string, purpose: KeyPurpose, options?: EnvelopeEncryptOptions): Promise<EnvelopePayload>;
+    envelopeDecrypt(envelope: EnvelopePayload, purpose: KeyPurpose, options?: EnvelopeDecryptOptions): Promise<string>;
+    multiRecipientEncrypt(plaintext: string, recipients: RecipientKey[], options?: MultiRecipientOptions): Promise<MultiRecipientEnvelope>;
+    multiRecipientDecrypt(envelope: MultiRecipientEnvelope, recipientId: string, privateKeyPEM: string, options?: MultiRecipientOptions): Promise<string>;
+    addRecipient(envelope: MultiRecipientEnvelope, existingId: string, existingPrivateKeyPEM: string, newRecipient: RecipientKey): Promise<MultiRecipientEnvelope>;
+    removeRecipient(envelope: MultiRecipientEnvelope, recipientId: string): MultiRecipientEnvelope;
+    sign<T>(payload: T, purpose: KeyPurpose, options?: SignTokenOptions): Promise<string>;
+    verify<T>(token: string, purpose: KeyPurpose, options?: VerifyTokenOptions): Promise<VerifyTokenResult<T>>;
+    encryptStream(options: StreamEncryptOptions): TransformStream<Uint8Array, Uint8Array>;
+    decryptStream(options: StreamDecryptOptions): TransformStream<Uint8Array, Uint8Array>;
+    generateRSAKeyPair(modulusLength?: 2048 | 4096): Promise<RSAKeyPair>;
+    encryptRSA(plaintext: string, publicKeyPEM: string, encoding?: Encoding): Promise<string>;
+    decryptRSA(ciphertext: string, privateKeyPEM: string, encoding?: Encoding): Promise<string>;
+    generateRSAPSSKeyPair(modulusLength?: 2048 | 4096): Promise<RSAKeyPair>;
+    signRSA(data: string | Uint8Array, privateKeyPEM: string, encoding?: Encoding): Promise<string>;
+    verifyRSA(data: string | Uint8Array, signature: string, publicKeyPEM: string, encoding?: Encoding): Promise<boolean>;
+    generateECDHKeyPair(curve?: ECCurve): Promise<ECKeyPair>;
+    deriveSharedSecret(privateKeyPEM: string, peerPublicKeyPEM: string, curve?: ECCurve): Promise<string>;
+    generateECDSAKeyPair(curve?: ECCurve): Promise<ECKeyPair>;
+    signECDSA(data: string | Uint8Array, privateKeyPEM: string, curve?: ECCurve, encoding?: Encoding): Promise<string>;
+    verifyECDSA(data: string | Uint8Array, signature: string, publicKeyPEM: string, curve?: ECCurve, encoding?: Encoding): Promise<boolean>;
+    generateTOTPSecret(bytes?: number): string;
+    totpKeyUri(secret: string, account: string, issuer: string, options?: Pick<TOTPOptions, 'digits' | 'period'>): string;
+    generateTOTP(secret: string, options?: TOTPOptions): Promise<string>;
+    generateHOTP(secret: string, counter: number, options?: HOTPOptions): Promise<string>;
+    verifyTOTP(code: string, secret: string, options?: TOTPOptions & {
+        skew?: number;
+    }): Promise<TOTPVerifyResult>;
+    deriveKeyFromPassword(password: string, purpose: string, options?: DeriveKeyFromPasswordOptions): Promise<DerivedPasswordKey>;
+    hash(input: string | Uint8Array, algorithm?: HashAlgorithm, encoding?: 'hex' | 'base64' | 'base64url'): Promise<string>;
+    hmac(message: string | Uint8Array, keyHex?: string, algorithm?: HashAlgorithm, encoding?: 'hex' | 'base64' | 'base64url'): Promise<string>;
+    verifyHmac(message: string | Uint8Array, signature: string, keyHex?: string, algorithm?: HashAlgorithm, encoding?: 'hex' | 'base64' | 'base64url'): Promise<boolean>;
+    inspectPayload(payload: string, encoding?: Encoding): PayloadInspection;
+    inspectStreamHeader(headerBytes: Uint8Array): StreamHeaderInspection;
+    inspectToken(token: string): ReturnType<typeof inspectToken>;
+    keyFingerprint(): Promise<KeyFingerprint>;
+    rotate(newMasterKeyHex: string): EncryptixClient;
+    reEncrypt(payload: string, fromPurpose: string, toPurpose: string, options?: {
+        fromOptions?: DecryptOptions;
+        toOptions?: EncryptOptions;
+    }): Promise<string>;
+    exportKey(format?: KeyExportFormat): Promise<string>;
+    generateToken(bytes?: number, encoding?: 'hex' | 'base64' | 'base64url'): string;
+    generateApiKey(prefix?: string, bytes?: number): string;
+    generateUUID(): string;
+    randomBytes(n: number): Uint8Array;
+    randomInt(min: number, max: number): number;
+    randomFloat(): number;
+    randomString(length: number, charset?: string): string;
+    randomChoice<T>(array: readonly T[]): T;
+    randomSample<T>(array: readonly T[], n: number): T[];
+    randomShuffle<T>(array: readonly T[]): T[];
+    private resolveDecryptionKey;
+}
+export declare function createEncryptix(config?: EncryptixConfig): EncryptixClient;
+//# sourceMappingURL=client.d.ts.map

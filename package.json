@@ -1,0 +1,90 @@
+{
+  "name": "@ppabari/encryptix",
+  "version": "1.0.0",
+  "description": "A secure, zero-dependency crypto toolkit for Node.js, browsers, and edge runtimes. AES-256-GCM, ChaCha20-Poly1305, RSA-OAEP, ECDH, ECDSA, RSA-PSS, AES-SIV, TOTP/HOTP, envelope encryption, streaming, signed tokens, key rotation, and more.",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    }
+  },
+  "browser": {
+    "./dist/cjs/algorithms/chacha20.js": false,
+    "./dist/esm/algorithms/chacha20.js": false
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "SECURITY.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.esm.json && tsc -p tsconfig.cjs.json && tsc -p tsconfig.types.json",
+    "build:watch": "tsc -p tsconfig.esm.json --watch",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest",
+    "test:coverage": "node --experimental-vm-modules node_modules/.bin/jest --coverage",
+    "test:watch": "node --experimental-vm-modules node_modules/.bin/jest --watch",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run typecheck && npm run build && npm test",
+    "version": "npm run build",
+    "postversion": "git push && git push --tags"
+  },
+  "keywords": [
+    "encryption", "decryption", "crypto", "cryptography", "security",
+    "aes-256-gcm", "chacha20", "chacha20-poly1305", "rsa", "rsa-oaep",
+    "ecdh", "ecdsa", "rsa-pss", "aes-siv", "deterministic-encryption",
+    "hkdf", "key-derivation", "pbkdf2", "scrypt", "argon2",
+    "totp", "hotp", "otp", "two-factor", "2fa", "authenticator",
+    "envelope-encryption", "key-wrapping", "aes-kw", "multi-recipient",
+    "streaming", "stream-encryption", "web-streams",
+    "signed-token", "jwt-alternative", "hmac",
+    "key-rotation", "key-management", "key-versioning",
+    "authenticated-encryption", "aead",
+    "zero-dependency", "edge", "browser", "node", "cloudflare-workers",
+    "web-crypto", "typescript"
+  ],
+  "author": {
+    "name": "Parth Pabari",
+    "url": "https://github.com/parthpabari"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/parthpabari/encryptix.git"
+  },
+  "bugs": {
+    "url": "https://github.com/parthpabari/encryptix/issues"
+  },
+  "homepage": "https://github.com/parthpabari/encryptix#readme",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/parthpabari"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@types/node": "^20.0.0",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.0"
+  }
+}
