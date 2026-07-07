@@ -1,0 +1,11 @@
+<aside class="sidebar">
+  {% for group in site.sidebar %}
+    <div class="group">
+      <div class="group-title">{{ group.group }}</div>
+      {% for item in group.items %}
+        {% assign target = item.url | relative_url %}
+        <a href="{{ target }}"{% if page.url == item.url %} class="active"{% endif %}>{{ item.title }}</a>
+      {% endfor %}
+    </div>
+  {% endfor %}
+</aside>

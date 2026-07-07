@@ -1,0 +1,108 @@
+# ── Site ──────────────────────────────────────────────────────────────────
+title: encryptix
+tagline: Zero-dependency crypto toolkit for Node, browsers & edge
+description: >-
+  A secure, zero-dependency crypto toolkit for Node.js, browsers, and edge
+  runtimes. AES-256-GCM, ChaCha20-Poly1305, RSA, ECDH/ECDSA, AES-SIV, TOTP/HOTP,
+  envelope encryption, streaming, signed tokens, key rotation, and more.
+lang: en
+
+# Served from https://parthpabari.github.io/encryptix/
+url: "https://parthpabari.github.io"
+baseurl: "/encryptix"
+
+npm_package: "@ppabari/encryptix"
+version: "1.0.0"
+github_repo: "parthpabari/encryptix"
+github_url: "https://github.com/parthpabari/encryptix"
+npm_url: "https://www.npmjs.com/package/@ppabari/encryptix"
+
+# ── Build ─────────────────────────────────────────────────────────────────
+markdown: kramdown
+highlighter: rouge
+permalink: pretty
+
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    default_lang: text
+
+sass:
+  style: compressed
+  sass_dir: _sass
+
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: "doc"
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - .bundle
+  - .bundle-gems
+  - README.md
+  - node_modules
+
+# ── Top navigation ──────────────────────────────────────────────────────────
+nav:
+  - title: Guide
+    url: /guide/getting-started/
+  - title: API
+    url: /api/overview/
+  - title: Changelog
+    url: https://github.com/parthpabari/encryptix/blob/main/CHANGELOG.md
+
+# ── Docs sidebar ──────────────────────────────────────────────────────────
+sidebar:
+  - group: Guide
+    items:
+      - title: Getting Started
+        url: /guide/getting-started/
+      - title: Core Concepts
+        url: /guide/core-concepts/
+      - title: Configuration
+        url: /guide/configuration/
+      - title: Error Handling
+        url: /guide/error-handling/
+      - title: Security
+        url: /guide/security/
+  - group: Symmetric
+    items:
+      - title: Symmetric Encryption
+        url: /api/symmetric/
+      - title: Deterministic (AES-SIV)
+        url: /api/deterministic/
+      - title: Envelope & Multi-Recipient
+        url: /api/envelope/
+      - title: Streaming
+        url: /api/streaming/
+      - title: Batch Operations
+        url: /api/batch/
+  - group: Asymmetric & Auth
+    items:
+      - title: Asymmetric (RSA / EC)
+        url: /api/asymmetric/
+      - title: Signed Tokens
+        url: /api/signed-tokens/
+      - title: OTP (TOTP / HOTP)
+        url: /api/otp/
+  - group: Keys & Utilities
+    items:
+      - title: Password KDF
+        url: /api/password-kdf/
+      - title: Key Management
+        url: /api/key-management/
+      - title: Hashing, HMAC & Random
+        url: /api/utilities/
+  - group: Reference
+    items:
+      - title: API Overview
+        url: /api/overview/

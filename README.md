@@ -6,6 +6,8 @@
 [![license](https://img.shields.io/npm/l/@ppabari/encryptix.svg)](./LICENSE)
 [![types](https://img.shields.io/badge/types-TypeScript-blue.svg)](./src/types/index.ts)
 
+📖 **[Documentation](https://parthpabari.github.io/encryptix/)** · [API Reference](https://parthpabari.github.io/encryptix/api/overview)
+
 ---
 
 ## Why encryptix?

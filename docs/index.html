@@ -1,0 +1,143 @@
+---
+layout: home
+permalink: /
+title: encryptix
+---
+
+<!-- ── Hero ─────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="container">
+    <span class="badge-pill"><span class="dot"></span> v{{ site.version }} · zero dependencies · AEAD by default</span>
+    <h1>Encryption that's <span class="gradient-text">hard to misuse</span>.</h1>
+    <p class="sub">
+      A zero-dependency crypto toolkit for Node.js, browsers &amp; edge.
+      AES-256-GCM, ChaCha20, RSA, ECDH/ECDSA, AES-SIV, TOTP, envelope encryption,
+      streaming &amp; signed tokens — all purpose-scoped and authenticated.
+    </p>
+
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="{{ '/guide/getting-started/' | relative_url }}">
+        Get Started
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <a class="btn btn-secondary" href="{{ '/api/overview/' | relative_url }}">API Reference</a>
+    </div>
+
+    <div class="install">
+      <span class="prompt">$</span>
+      <span class="cmd">npm install {{ site.npm_package }}</span>
+      <button class="copy" data-copy="npm install {{ site.npm_package }}">copy</button>
+    </div>
+
+    <!-- Terminal demo -->
+    <div class="terminal reveal">
+      <div class="bar">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="file">vault.ts</span>
+      </div>
+<pre><code><span class="highlight"><span class="k">import</span> { EncryptixClient, generateMasterKey } <span class="k">from</span> <span class="s">'{{ site.npm_package }}'</span>;
+
+<span class="c">// Generate once, store as ENCRYPTIX_KEY</span>
+<span class="k">const</span> key = <span class="nf">generateMasterKey</span>();        <span class="c">// 64-char hex = 32 bytes</span>
+<span class="k">const</span> enc = <span class="k">new</span> <span class="nf">EncryptixClient</span>();     <span class="c">// reads ENCRYPTIX_KEY from env</span>
+
+<span class="c">// Purpose-scoped, authenticated encryption</span>
+<span class="k">const</span> payload = <span class="k">await</span> enc.<span class="nf">encrypt</span>(<span class="s">'user@example.com'</span>, <span class="s">'user:email'</span>);
+<span class="k">const</span> email   = <span class="k">await</span> enc.<span class="nf">decrypt</span>(payload, <span class="s">'user:email'</span>);
+
+<span class="c">// Wrong purpose fails — even with the correct key</span>
+<span class="k">await</span> enc.<span class="nf">decrypt</span>(payload, <span class="s">'payment:card'</span>); <span class="c">// ✗ throws</span></span></code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ── Stats ────────────────────────────────────────────────────────── -->
+<section class="section" style="padding-top:24px">
+  <div class="container">
+    <div class="stats">
+      <div class="stat reveal"><div class="num gradient-text">0</div><div class="lbl">runtime dependencies</div></div>
+      <div class="stat reveal"><div class="num gradient-text">AEAD</div><div class="lbl">authenticated by default</div></div>
+      <div class="stat reveal"><div class="num gradient-text">4</div><div class="lbl">runtimes: Node · browser · Deno · edge</div></div>
+      <div class="stat reveal"><div class="num gradient-text">100%</div><div class="lbl">TypeScript typed</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Features ─────────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Why encryptix</div>
+      <h2>Safe defaults, serious primitives</h2>
+      <p>A batteries-included crypto layer that's ergonomic enough for app code and rigorous enough for the sensitive stuff.</p>
+    </div>
+    <div class="features">
+      <div class="feature reveal">
+        <div class="ico">🔒</div>
+        <h3>Authenticated by default</h3>
+        <p>Every symmetric cipher is AEAD — tampering is always detected. There is no unauthenticated mode to misuse.</p>
+      </div>
+      <div class="feature reveal">
+        <div class="ico">🎯</div>
+        <h3>Purpose scoping</h3>
+        <p>Each operation is bound to a <code>purpose</code> string via HKDF + AAD. A ciphertext for <code>auth:session</code> can never be read as <code>payment:card</code>.</p>
+      </div>
+      <div class="feature reveal">
+        <div class="ico">📦</div>
+        <h3>Zero dependencies</h3>
+        <p>Built on the Web Crypto API. No supply-chain surface, tiny footprint, ships ESM + CJS with full types.</p>
+      </div>
+      <div class="feature reveal">
+        <div class="ico">🌍</div>
+        <h3>Runs everywhere</h3>
+        <p>Node.js ≥18, modern browsers, Deno, Bun, Cloudflare Workers &amp; Vercel Edge — one API across all of them.</p>
+      </div>
+      <div class="feature reveal">
+        <div class="ico">✉️</div>
+        <h3>Envelope &amp; rotation</h3>
+        <p>DEK/KEK envelope encryption, key rotation with backward-compatible payloads, and key fingerprinting for multi-key debugging.</p>
+      </div>
+      <div class="feature reveal">
+        <div class="ico">🔑</div>
+        <h3>Batteries included</h3>
+        <p>Signed tokens, TOTP/HOTP, RSA &amp; EC keys, password KDF, streaming, deterministic search fields, multi-recipient — all in one toolkit.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Capabilities ─────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">The toolkit</div>
+      <h2>Everything you need to encrypt</h2>
+      <p>One client, many primitives. <a href="{{ '/api/overview/' | relative_url }}">Full reference →</a></p>
+    </div>
+    <div class="cats">
+      <div class="cat reveal"><h3><span class="emoji">🔐</span> Symmetric</h3><div class="fns"><code>encrypt</code><code>decrypt</code><code>encryptObject</code><code>AES-256-GCM</code><code>ChaCha20</code></div></div>
+      <div class="cat reveal"><h3><span class="emoji">🔎</span> Deterministic</h3><div class="fns"><code>encryptDeterministic</code><code>AES-SIV</code><code>searchable</code></div></div>
+      <div class="cat reveal"><h3><span class="emoji">✉️</span> Envelope</h3><div class="fns"><code>envelopeEncrypt</code><code>DEK/KEK</code><code>multiRecipientEncrypt</code></div></div>
+      <div class="cat reveal"><h3><span class="emoji">🌊</span> Streaming</h3><div class="fns"><code>encryptStream</code><code>decryptStream</code><code>chunked AEAD</code></div></div>
+      <div class="cat reveal"><h3><span class="emoji">🎫</span> Signed Tokens</h3><div class="fns"><code>sign</code><code>verify</code><code>HMAC-SHA256</code></div></div>
+      <div class="cat reveal"><h3><span class="emoji">🔏</span> Asymmetric</h3><div class="fns"><code>RSA-OAEP</code><code>RSA-PSS</code><code>ECDH</code><code>ECDSA</code></div></div>
+      <div class="cat reveal"><h3><span class="emoji">📱</span> OTP</h3><div class="fns"><code>generateTOTP</code><code>verifyTOTP</code><code>generateHOTP</code></div></div>
+      <div class="cat reveal"><h3><span class="emoji">🗝️</span> Keys</h3><div class="fns"><code>deriveKeyFromPassword</code><code>rotate</code><code>keyFingerprint</code><code>zeroize</code></div></div>
+      <div class="cat reveal"><h3><span class="emoji">🎲</span> Utilities</h3><div class="fns"><code>hash</code><code>hmac</code><code>secureRandom*</code><code>base32</code></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ──────────────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <div class="cta-band reveal">
+      <h2>Encrypt with confidence</h2>
+      <p>Authenticated, purpose-scoped, zero-dependency. Built for real applications.</p>
+      <div class="hero-actions" style="margin-bottom:0">
+        <a class="btn btn-primary" href="{{ '/guide/getting-started/' | relative_url }}">Read the Guide</a>
+        <a class="btn btn-secondary" href="{{ site.npm_url }}" target="_blank" rel="noopener">View on npm</a>
+      </div>
+    </div>
+  </div>
+</section>

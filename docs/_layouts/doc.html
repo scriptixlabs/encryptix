@@ -1,0 +1,37 @@
+---
+layout: default
+---
+{%- comment -%} Flatten the sidebar into parallel arrays for prev/next nav {%- endcomment -%}
+{%- capture _urls -%}{%- for g in site.sidebar -%}{%- for i in g.items -%}{{ i.url }}|~|{%- endfor -%}{%- endfor -%}{%- endcapture -%}
+{%- capture _titles -%}{%- for g in site.sidebar -%}{%- for i in g.items -%}{{ i.title }}|~|{%- endfor -%}{%- endfor -%}{%- endcapture -%}
+{%- assign _urlArr = _urls | split: "|~|" -%}
+{%- assign _titleArr = _titles | split: "|~|" -%}
+{%- assign _idx = -1 -%}
+{%- for u in _urlArr -%}{%- if u == page.url -%}{%- assign _idx = forloop.index0 -%}{%- endif -%}{%- endfor -%}
+
+<div class="docs">
+  {% include sidebar.html %}
+  <article class="content">
+    {{ content }}
+
+    {%- if _idx >= 0 -%}
+    <nav class="page-nav">
+      {%- assign _prev = _idx | minus: 1 -%}
+      {%- assign _next = _idx | plus: 1 -%}
+      {%- if _idx > 0 -%}
+        <a class="prev" href="{{ _urlArr[_prev] | relative_url }}">
+          <div class="dir">← Previous</div>
+          <div class="ttl">{{ _titleArr[_prev] }}</div>
+        </a>
+      {%- else -%}<span></span>{%- endif -%}
+      {%- assign _lastIdx = _urlArr | size | minus: 1 -%}
+      {%- if _idx < _lastIdx -%}
+        <a class="next" href="{{ _urlArr[_next] | relative_url }}">
+          <div class="dir">Next →</div>
+          <div class="ttl">{{ _titleArr[_next] }}</div>
+        </a>
+      {%- else -%}<span></span>{%- endif -%}
+    </nav>
+    {%- endif -%}
+  </article>
+</div>

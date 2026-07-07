@@ -1,0 +1,22 @@
+source "https://rubygems.org"
+
+gem "jekyll", "~> 4.3"
+
+# Kramdown GFM input (tables, fenced code, task lists).
+gem "kramdown-parser-gfm", "~> 1.1"
+
+group :jekyll_plugins do
+  gem "jekyll-seo-tag", "~> 2.8"
+  gem "jekyll-sitemap", "~> 1.4"
+end
+
+# Former stdlib gems removed from Ruby 3.4+/4.0 defaults — required explicitly
+# so the site builds on modern Ruby (local + CI).
+gem "csv"
+gem "base64"
+gem "bigdecimal"
+gem "logger"
+gem "webrick", "~> 1.8"
+
+# Windows/JRuby time-zone data (harmless elsewhere).
+gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
