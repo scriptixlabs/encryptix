@@ -1,12 +1,12 @@
-# @ppabari/encryptix
+# @scriptixlabs/encryptix
 
 > A secure, zero-dependency encryption library for Node.js, browsers, and edge runtimes.
 
-[![npm version](https://img.shields.io/npm/v/@ppabari/encryptix.svg)](https://www.npmjs.com/package/@ppabari/encryptix)
-[![license](https://img.shields.io/npm/l/@ppabari/encryptix.svg)](./LICENSE)
+[![npm version](https://img.shields.io/npm/v/@scriptixlabs/encryptix.svg)](https://www.npmjs.com/package/@scriptixlabs/encryptix)
+[![license](https://img.shields.io/npm/l/@scriptixlabs/encryptix.svg)](./LICENSE)
 [![types](https://img.shields.io/badge/types-TypeScript-blue.svg)](./src/types/index.ts)
 
-📖 **[Documentation](https://parthpabari.github.io/encryptix/)** · [API Reference](https://parthpabari.github.io/encryptix/api/overview)
+📖 **[Documentation](https://scriptixlabs.github.io/encryptix/)** · [API Reference](https://scriptixlabs.github.io/encryptix/api/overview)
 
 ---
 
@@ -33,9 +33,9 @@
 ## Installation
 
 ```bash
-npm install @ppabari/encryptix
-pnpm add @ppabari/encryptix
-yarn add @ppabari/encryptix
+npm install @scriptixlabs/encryptix
+pnpm add @scriptixlabs/encryptix
+yarn add @scriptixlabs/encryptix
 ```
 
 ---
@@ -43,7 +43,7 @@ yarn add @ppabari/encryptix
 ## Quick Start
 
 ```ts
-import { EncryptixClient, generateMasterKey } from '@ppabari/encryptix';
+import { EncryptixClient, generateMasterKey } from '@scriptixlabs/encryptix';
 
 // One-time: generate and store your master key
 const key = generateMasterKey(); // 64-char hex = 32 bytes
@@ -238,7 +238,7 @@ const encTransform2 = enc.encryptStream({
 Derives a strong encryption key from a human password. Uses scrypt in Node.js (memory-hard, GPU-resistant) or PBKDF2 in browsers/edge.
 
 ```ts
-import { deriveKeyFromPassword } from '@ppabari/encryptix';
+import { deriveKeyFromPassword } from '@scriptixlabs/encryptix';
 
 // Derive key from password (generates a random salt)
 const { keyHex, saltHex, algorithm, params } = await deriveKeyFromPassword(
@@ -298,7 +298,7 @@ const fp = await enc.keyFingerprint();
 ### RSA-OAEP
 
 ```ts
-import { generateRSAKeyPair } from '@ppabari/encryptix';
+import { generateRSAKeyPair } from '@scriptixlabs/encryptix';
 
 const { publicKey, privateKey } = await generateRSAKeyPair(2048);
 
@@ -346,7 +346,7 @@ const enc = new EncryptixClient({
 All errors are `EncryptixError` with a machine-readable `code`:
 
 ```ts
-import { EncryptixError } from '@ppabari/encryptix';
+import { EncryptixError } from '@scriptixlabs/encryptix';
 
 try {
   await enc.decrypt(payload, 'wrong:purpose');
@@ -444,4 +444,4 @@ Streaming chunks:
 
 ## License
 
-MIT © [Parth Pabari](https://github.com/ppabari)
+MIT © [Scriptix Labs](https://github.com/scriptixlabs)

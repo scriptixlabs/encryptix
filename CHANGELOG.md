@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to `@ppabari/encryptix` are documented here.
+All notable changes to `@scriptixlabs/encryptix` are documented here.
 
 This project follows [Conventional Commits](https://www.conventionalcommits.org/) and [Semantic Versioning](https://semver.org/).
 

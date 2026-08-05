@@ -1,5 +1,5 @@
 /**
- * EncryptixClient — primary interface for @ppabari/encryptix
+ * EncryptixClient — primary interface for @scriptixlabs/encryptix
  */
 
 import { aesEncrypt, aesDecrypt, ALGO_ID as AES_ALGO_ID } from './algorithms/aes-gcm.js';

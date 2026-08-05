@@ -1,5 +1,5 @@
 /**
- * @ppabari/encryptix — Complete Crypto Toolkit
+ * @scriptixlabs/encryptix — Complete Crypto Toolkit
  */
 
 // Client & factory

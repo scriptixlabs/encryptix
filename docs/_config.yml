@@ -7,15 +7,15 @@ description: >-
   envelope encryption, streaming, signed tokens, key rotation, and more.
 lang: en
 
-# Served from https://parthpabari.github.io/encryptix/
-url: "https://parthpabari.github.io"
+# Served from https://scriptixlabs.github.io/encryptix/
+url: "https://scriptixlabs.github.io"
 baseurl: "/encryptix"
 
-npm_package: "@ppabari/encryptix"
+npm_package: "@scriptixlabs/encryptix"
 version: "1.0.0"
-github_repo: "parthpabari/encryptix"
-github_url: "https://github.com/parthpabari/encryptix"
-npm_url: "https://www.npmjs.com/package/@ppabari/encryptix"
+github_repo: "scriptixlabs/encryptix"
+github_url: "https://github.com/scriptixlabs/encryptix"
+npm_url: "https://www.npmjs.com/package/@scriptixlabs/encryptix"
 
 # ── Build ─────────────────────────────────────────────────────────────────
 markdown: kramdown
@@ -58,7 +58,7 @@ nav:
   - title: API
     url: /api/overview/
   - title: Changelog
-    url: https://github.com/parthpabari/encryptix/blob/main/CHANGELOG.md
+    url: https://github.com/scriptixlabs/encryptix/blob/main/CHANGELOG.md
 
 # ── Docs sidebar ──────────────────────────────────────────────────────────
 sidebar:

@@ -1,5 +1,5 @@
 /**
- * Password-Based Key Derivation for @ppabari/encryptix
+ * Password-Based Key Derivation for @scriptixlabs/encryptix
  *
  * Two backends:
  *   scrypt  — Node.js only. Memory-hard, GPU-resistant. STRONGLY preferred for Node.

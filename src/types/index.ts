@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// @ppabari/encryptix — Core Types
+// @scriptixlabs/encryptix — Core Types
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** Supported symmetric encryption algorithms */

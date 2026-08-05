@@ -1,5 +1,5 @@
 /**
- * @ppabari/encryptix — Full Test Suite
+ * @scriptixlabs/encryptix — Full Test Suite
  */
 
 import {

@@ -17,13 +17,13 @@ Only the latest major version receives security patches. If you are on an older 
 ### Preferred: GitHub Security Advisories
 
 Report vulnerabilities privately via:
-[https://github.com/parthpabari/encryptix/security/advisories/new](https://github.com/ppabari/encryptix/security/advisories/new)
+[https://github.com/scriptixlabs/encryptix/security/advisories/new](https://github.com/scriptixlabs/encryptix/security/advisories/new)
 
 This is the fastest path — you'll get a response within **48 hours**.
 
 ### Alternative: Email
 
-Send a PGP-encrypted email to: **security@ppabari.dev**
+Send a PGP-encrypted email to: **security@scriptixlabs.com**
 
 Include in your report:
 - A description of the vulnerability and its impact

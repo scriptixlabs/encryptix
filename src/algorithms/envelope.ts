@@ -1,5 +1,5 @@
 /**
- * Envelope Encryption for @ppabari/encryptix
+ * Envelope Encryption for @scriptixlabs/encryptix
  *
  * Pattern:
  *   1. Generate a random 256-bit Data Encryption Key (DEK) per payload

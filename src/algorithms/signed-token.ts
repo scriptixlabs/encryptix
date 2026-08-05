@@ -1,5 +1,5 @@
 /**
- * Signed Tokens for @ppabari/encryptix
+ * Signed Tokens for @scriptixlabs/encryptix
  *
  * A lightweight, self-contained signed token format.
  * Think: JWT without the ecosystem complexity and algorithm confusion attacks.

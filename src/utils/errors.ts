@@ -1,7 +1,7 @@
 import type { EncryptixErrorCode } from '../types/index.js';
 
 /**
- * Structured error thrown by all @ppabari/encryptix operations.
+ * Structured error thrown by all @scriptixlabs/encryptix operations.
  * Always carries a machine-readable `code` so callers can handle
  * specific failure modes without parsing message strings.
  */

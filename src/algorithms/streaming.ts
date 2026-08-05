@@ -1,5 +1,5 @@
 /**
- * Streaming Encryption for @ppabari/encryptix
+ * Streaming Encryption for @scriptixlabs/encryptix
  *
  * Uses the Web Streams API (ReadableStream / TransformStream), which is
  * available in Node 18+, modern browsers, and edge runtimes.
