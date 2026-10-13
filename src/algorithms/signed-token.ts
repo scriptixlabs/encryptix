@@ -19,7 +19,7 @@
  *   - Constant-time signature verification
  */
 
-import { getCrypto, encode, hexToBytes, bytesToBase64, base64ToBytes, bytesToHex } from '../utils/env.js';
+import { getCrypto, encode, hexToBytes, bytesToBase64, base64ToBytes, bytesToHex, timingSafeEqual } from '../utils/env.js';
 import { deriveRawKey } from '../utils/kdf.js';
 import { EncryptixError } from '../utils/errors.js';
 import type {
@@ -86,9 +86,7 @@ export async function verifyToken<T>(
   let tokenStr: string;
   try {
     if (encoding === 'hex') {
-      tokenStr = new TextDecoder().decode(Uint8Array.from(
-        token.match(/.{1,2}/g)!.map(b => parseInt(b, 16))
-      ));
+      tokenStr = new TextDecoder().decode(hexToBytes(token));
     } else if (encoding === 'base64') {
       tokenStr = new TextDecoder().decode(base64ToBytes(token));
     } else {
@@ -129,7 +127,7 @@ export async function verifyToken<T>(
     return { valid: false, payload: null, reason: 'malformed' };
   }
 
-  const sigValid = constantTimeEqual(expectedSigBytes, providedSigBytes);
+  const sigValid = timingSafeEqual(expectedSigBytes, providedSigBytes);
   if (!sigValid) {
     return { valid: false, payload: null, reason: 'invalid_signature' };
   }
@@ -182,11 +180,4 @@ async function computeHmac(message: string, keyBytes: Uint8Array): Promise<strin
   );
   const sig = await subtle.sign('HMAC', key, encode(message) as unknown as Uint8Array<ArrayBuffer>);
   return bytesToHex(new Uint8Array(sig));
-}
-
-function constantTimeEqual(a: Uint8Array, b: Uint8Array): boolean {
-  if (a.length !== b.length) return false;
-  let diff = 0;
-  for (let i = 0; i < a.length; i++) diff |= a[i] ^ b[i];
-  return diff === 0;
 }

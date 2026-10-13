@@ -312,9 +312,30 @@ export interface HashOptions {
   encoding?: 'hex' | 'base64' | 'base64url';
 }
 
+/** Output (and, for verification, signature) encoding of an HMAC. */
+export type HmacOutputEncoding = 'hex' | 'base64' | 'base64url';
+
+/**
+ * How a **string** HMAC key is turned into key bytes.
+ * - `'hex'` (default) — the string is hex-decoded; matches 1.0.0 behaviour.
+ * - `'utf8'` — the string's UTF-8 bytes are the key. Use this for webhook
+ *   secrets issued as plain text (Shopify, WooCommerce, EKM, Etsy, ...). This
+ *   is equivalent to Node's `createHmac(alg, secretString)`.
+ * - `'base64'` / `'base64url'` — the string is base64-decoded.
+ *
+ * Ignored when the key is a `Uint8Array` (raw bytes are used as-is).
+ */
+export type HmacKeyEncoding = 'hex' | 'utf8' | 'base64' | 'base64url';
+
+/** HMAC key: a string (decoded per `keyEncoding`) or raw key bytes. */
+export type HmacKey = string | Uint8Array;
+
 export interface HmacOptions {
   algorithm?: HashAlgorithm;
-  encoding?: 'hex' | 'base64' | 'base64url';
+  /** Output encoding for `hmac`, expected signature encoding for `verifyHmac`. Default `'hex'`. */
+  encoding?: HmacOutputEncoding;
+  /** How a string key is decoded. Default `'hex'`. */
+  keyEncoding?: HmacKeyEncoding;
 }
 
 // ─── Errors ───────────────────────────────────────────────────────────────────

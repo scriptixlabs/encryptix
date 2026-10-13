@@ -314,9 +314,17 @@ const plaintext  = await enc.decryptRSA(ciphertext, privateKey);
 // SHA-256/384/512 hash
 const digest = await enc.hash('my-token', 'sha256', 'hex');
 
-// HMAC (signs with master key by default)
+// HMAC with no key → signs with the client's raw master key (intentional default)
 const sig   = await enc.hmac(webhookBody);
 const valid = await enc.verifyHmac(webhookBody, sig); // constant-time
+
+// Third-party webhook secrets are plain text: say so with keyEncoding: 'utf8'.
+// String keys are hex-decoded by default; a non-hex string throws INVALID_KEY.
+// Shopify sends base64(HMAC-SHA256(rawBody, secret)) in X-Shopify-Hmac-Sha256:
+const ok = await enc.verifyHmac(rawBody, req.headers['x-shopify-hmac-sha256'], process.env.SHOPIFY_SECRET!, {
+  keyEncoding: 'utf8',   // 'hex' (default) | 'utf8' | 'base64' | 'base64url'
+  encoding: 'base64',    // signature/output encoding: 'hex' (default) | 'base64' | 'base64url'
+});
 
 // Random token (hex by default)
 const token = enc.generateToken(32, 'hex');       // 64-char hex
@@ -420,8 +428,8 @@ Streaming chunks:
 | `generateRSAKeyPair(bits?)` | Generate 2048/4096 RSA key pair (PEM) |
 | `deriveKeyFromPassword(pass, purpose, opts?)` | scrypt/PBKDF2 password → keyHex |
 | `hash(input, alg?, enc?)` | SHA-256/384/512 |
-| `hmac(msg, key?, alg?)` | HMAC sign |
-| `verifyHmac(msg, sig, key?)` | Constant-time HMAC verify |
+| `hmac(msg, key?, alg?\|opts?)` | HMAC sign (key: hex string, `Uint8Array`, or any string with `keyEncoding`) |
+| `verifyHmac(msg, sig, key?, alg?\|opts?)` | Constant-time HMAC verify |
 | `keyFingerprint()` | Short non-reversible key identifier |
 | `rotate(newKeyHex)` | Key rotation → new EncryptixClient |
 | `generateToken(bytes?, enc?)` | Cryptographic random token |

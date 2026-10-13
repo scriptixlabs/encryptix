@@ -33,7 +33,7 @@
  *   [N bytes ciphertext]
  */
 
-import { getCrypto, concatBytes, encode } from '../utils/env.js';
+import { getCrypto, concatBytes, encode, timingSafeEqual } from '../utils/env.js';
 import { deriveRawKey } from '../utils/kdf.js';
 import { EncryptixError } from '../utils/errors.js';
 import type { HashAlgorithm } from '../types/index.js';
@@ -116,7 +116,7 @@ export async function sivDecrypt(
   const components = aad ? [purposeBytes, aad] : [purposeBytes];
   const expectedSiv = await s2v(k1, components, plaintext);
 
-  if (!constantTimeEqual(siv, expectedSiv)) {
+  if (!timingSafeEqual(siv, expectedSiv)) {
     throw new EncryptixError(
       'DECRYPTION_FAILED',
       'AES-SIV authentication failed. Payload is tampered, corrupt, or wrong purpose/AAD was used.',
@@ -265,11 +265,4 @@ function pad(b: Uint8Array): Uint8Array {
   padded.set(b);
   padded[b.length] = 0x80;
   return padded;
-}
-
-function constantTimeEqual(a: Uint8Array, b: Uint8Array): boolean {
-  if (a.length !== b.length) return false;
-  let diff = 0;
-  for (let i = 0; i < a.length; i++) diff |= a[i] ^ b[i];
-  return diff === 0;
 }

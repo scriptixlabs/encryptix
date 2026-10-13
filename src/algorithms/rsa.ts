@@ -9,7 +9,7 @@
  * For large data, encrypt with AES/ChaCha and use RSA to wrap the key.
  */
 
-import { getCrypto, encode, decode, bytesToBase64, base64ToBytes } from '../utils/env.js';
+import { getCrypto, encode, decode, bytesToBase64, base64ToBytes, hexToBytes } from '../utils/env.js';
 import { EncryptixError } from '../utils/errors.js';
 import type { RSAKeyPair, Encoding } from '../types/index.js';
 
@@ -87,7 +87,7 @@ export async function rsaDecrypt(
   const privateKey = await importPrivateKey(privateKeyPEM, hash);
 
   const ciphertextBytes = encoding === 'hex'
-    ? Uint8Array.from(ciphertext.match(/.{1,2}/g)!.map(b => parseInt(b, 16)))
+    ? hexToBytes(ciphertext)
     : base64ToBytes(ciphertext);
 
   let plainBuffer: ArrayBuffer;

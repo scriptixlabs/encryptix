@@ -17,16 +17,45 @@ hash(input: string | Uint8Array, algorithm?: 'sha256' | 'sha384' | 'sha512', enc
 
 ## HMAC
 
-Signs with the master key by default; verification is constant-time.
+When no key is passed, the client signs with its raw master key (intentional default for signing your own data). Verification decodes the signature and compares bytes in constant time (Node's native `crypto.timingSafeEqual` where available, a constant-time JS loop in browsers/edge).
 
 ```ts
 const sig   = await enc.hmac(webhookBody);
 const valid = await enc.verifyHmac(webhookBody, sig); // constant-time
 ```
 
+**Key encoding.** A key is either raw bytes (`Uint8Array`) or a string decoded per `keyEncoding`:
+
+| `keyEncoding` | String key is… |
+|---|---|
+| `'hex'` (default) | hex-decoded — same as 1.0.0. Non-hex or odd-length strings throw `INVALID_KEY`. |
+| `'utf8'` | used as UTF-8 bytes — equivalent to Node's `createHmac(alg, secret)`. Use for Shopify, WooCommerce, EKM, Etsy webhook secrets. |
+| `'base64'` / `'base64url'` | base64-decoded. |
+
+Passing `keyEncoding` without a key throws instead of falling back to the master key.
+
 ```ts
-hmac(message: string | Uint8Array, keyHex?: string, algorithm?: HashAlgorithm, encoding?: 'hex' | 'base64' | 'base64url'): Promise<string>
-verifyHmac(message: string | Uint8Array, signature: string, keyHex?: string, algorithm?: HashAlgorithm, encoding?: 'hex' | 'base64' | 'base64url'): Promise<boolean>
+// Shopify: X-Shopify-Hmac-Sha256 = base64(HMAC-SHA256(rawBody, secret))
+const ok = await verifyHmac(rawBody, secret, header, { keyEncoding: 'utf8', encoding: 'base64' });
+```
+
+```ts
+type HmacKey = string | Uint8Array;
+interface HmacOptions {
+  algorithm?: HashAlgorithm;                       // default 'sha256' (client: its hashAlgorithm)
+  encoding?: 'hex' | 'base64' | 'base64url';        // output / signature encoding, default 'hex'
+  keyEncoding?: 'hex' | 'utf8' | 'base64' | 'base64url'; // default 'hex'
+}
+
+// Standalone
+hmac(message: string | Uint8Array, key: HmacKey, algorithm?: HashAlgorithm, encoding?: HmacOutputEncoding): Promise<string>
+hmac(message: string | Uint8Array, key: HmacKey, options?: HmacOptions): Promise<string>
+verifyHmac(message: string | Uint8Array, key: HmacKey, signature: string, algorithm?: HashAlgorithm, encoding?: HmacOutputEncoding): Promise<boolean>
+verifyHmac(message: string | Uint8Array, key: HmacKey, signature: string, options?: HmacOptions): Promise<boolean>
+
+// EncryptixClient (key optional → master key)
+enc.hmac(message, key?, algorithm?, encoding?) / enc.hmac(message, key | undefined, options)
+enc.verifyHmac(message, signature, key?, algorithm?, encoding?) / enc.verifyHmac(message, signature, key | undefined, options)
 ```
 
 ## Random tokens &amp; IDs

@@ -37,6 +37,7 @@ import type {
   RecipientKey, MultiRecipientEnvelope, MultiRecipientOptions,
   BatchResult, BatchEncryptItem, KeyMetadataStore, ReEncryptOptions, KeyExportFormat,
   PayloadInspection, StreamHeaderInspection,
+  HmacKey, HmacOptions, HmacOutputEncoding,
 } from './types/index.js';
 
 // ─── Re-exports ───────────────────────────────────────────────────────────────
@@ -277,8 +278,60 @@ export class EncryptixClient {
   // ─── Hashing / HMAC ──────────────────────────────────────────────────────
 
   async hash(input: string | Uint8Array, algorithm: HashAlgorithm = this.hashAlgorithm, encoding: 'hex' | 'base64' | 'base64url' = 'hex'): Promise<string> { return hash(input, algorithm, encoding); }
-  async hmac(message: string | Uint8Array, keyHex = this.masterKey, algorithm: HashAlgorithm = this.hashAlgorithm, encoding: 'hex' | 'base64' | 'base64url' = 'hex'): Promise<string> { return hmac(message, keyHex, algorithm, encoding); }
-  async verifyHmac(message: string | Uint8Array, signature: string, keyHex = this.masterKey, algorithm: HashAlgorithm = this.hashAlgorithm, encoding: 'hex' | 'base64' | 'base64url' = 'hex'): Promise<boolean> { return verifyHmac(message, keyHex, signature, algorithm, encoding); }
+
+  /**
+   * HMAC a message.
+   *
+   * **Master-key fallback (intentional, 1.0.0 behaviour):** when `key` is
+   * omitted (`undefined`), the client's raw master key is used as the HMAC key.
+   * This is meant for signing your own data; for third-party webhooks always
+   * pass the provider's secret explicitly, e.g.
+   * `enc.hmac(body, secret, { keyEncoding: 'utf8', encoding: 'base64' })`.
+   * Passing `keyEncoding` without a key throws, so a missing secret (e.g. an
+   * unset env var) never silently falls back to the master key in that form.
+   *
+   * String keys are hex-decoded unless `keyEncoding` says otherwise.
+   * The algorithm defaults to the client's `hashAlgorithm`.
+   */
+  async hmac(message: string | Uint8Array, key?: HmacKey, algorithm?: HashAlgorithm, encoding?: HmacOutputEncoding): Promise<string>;
+  async hmac(message: string | Uint8Array, key: HmacKey | undefined, options: HmacOptions): Promise<string>;
+  async hmac(message: string | Uint8Array, key?: HmacKey, algorithmOrOptions?: HashAlgorithm | HmacOptions, encoding?: HmacOutputEncoding): Promise<string> {
+    const [k, opts] = this.resolveClientHmac(key, algorithmOrOptions, encoding);
+    return hmac(message, k, opts);
+  }
+
+  /**
+   * Constant-time HMAC verification. Same key rules (and master-key fallback)
+   * as {@link EncryptixClient.hmac}.
+   */
+  async verifyHmac(message: string | Uint8Array, signature: string, key?: HmacKey, algorithm?: HashAlgorithm, encoding?: HmacOutputEncoding): Promise<boolean>;
+  async verifyHmac(message: string | Uint8Array, signature: string, key: HmacKey | undefined, options: HmacOptions): Promise<boolean>;
+  async verifyHmac(message: string | Uint8Array, signature: string, key?: HmacKey, algorithmOrOptions?: HashAlgorithm | HmacOptions, encoding?: HmacOutputEncoding): Promise<boolean> {
+    const [k, opts] = this.resolveClientHmac(key, algorithmOrOptions, encoding);
+    return verifyHmac(message, k, signature, opts);
+  }
+
+  private resolveClientHmac(
+    key: HmacKey | undefined,
+    algorithmOrOptions: HashAlgorithm | HmacOptions | undefined,
+    encoding: HmacOutputEncoding | undefined,
+  ): [HmacKey, HmacOptions] {
+    const raw: HmacOptions =
+      typeof algorithmOrOptions === 'object' && algorithmOrOptions !== null
+        ? algorithmOrOptions
+        : { algorithm: algorithmOrOptions, encoding };
+    const opts: HmacOptions = { ...raw, algorithm: raw.algorithm ?? this.hashAlgorithm };
+    if (key === undefined) {
+      if (raw.keyEncoding !== undefined) {
+        throw new EncryptixError(
+          'INVALID_KEY',
+          'keyEncoding was given but no HMAC key was passed. Refusing to fall back to the master key.',
+        );
+      }
+      return [this.masterKey, { ...opts, keyEncoding: 'hex' }];
+    }
+    return [key, opts];
+  }
 
   // ─── Inspect ────────────────────────────────────────────────────────────
 

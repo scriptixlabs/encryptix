@@ -14,7 +14,7 @@
  *   - The KEK (your master key) never directly touches the data
  */
 
-import { getCrypto, concatBytes, encode, bytesToBase64, base64ToBytes, bytesToHex } from '../utils/env.js';
+import { getCrypto, concatBytes, encode, bytesToBase64, base64ToBytes, bytesToHex, hexToBytes } from '../utils/env.js';
 import { deriveRawKey } from '../utils/kdf.js';
 import { aesEncrypt, aesDecrypt } from './aes-gcm.js';
 import { chachaEncrypt, chachaDecrypt } from './chacha20.js';
@@ -113,7 +113,7 @@ export async function envelopeDecrypt(
 
   const decodeStr = (s: string) =>
     encoding === 'hex'
-      ? Uint8Array.from(s.match(/.{1,2}/g)!.map(b => parseInt(b, 16)))
+      ? hexToBytes(s)
       : base64ToBytes(s);
 
   // 1. Derive the KEK from master key
